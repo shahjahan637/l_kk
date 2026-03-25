@@ -1,0 +1,281 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Advanced HTML Quiz – অধ্যায় ১: সেট ও ফাংশন</title>
+  <style>
+    :root{ --blue:#2563eb; --green:#039855; --yellow:#ca8a04; --red:#dc2626; --bg:#0b1020; --card:#0f172a; --muted:#94a3b8; --text:#e2e8f0; --accent:#22d3ee; }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:ui-sans-serif,-apple-system,Segoe UI,Roboto,'Noto Sans Bengali','Noto Sans','SolaimanLipi',Arial,sans-serif;background:#0b1020;color:var(--text);}
+    header{position:sticky;top:0;z-index:50;background:rgba(11,16,32,.75);backdrop-filter:blur(8px);border-bottom:1px solid rgba(148,163,184,.2);}
+    .wrap{max-width:1000px;margin:0 auto;padding:14px 16px;}
+    h1{margin:0;font-size:22px}
+    .pill{padding:6px 10px;border:1px solid rgba(255,255,255,.1);border-radius:999px;color:var(--muted);}
+    .meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .progress{height:10px;background:rgba(148,163,184,.2);border-radius:999px;overflow:hidden;margin-top:10px}
+    .progress>div{height:100%;width:0;background:linear-gradient(90deg,var(--accent),#60a5fa)}
+    main{padding:22px 0 130px}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.02));border:1px solid rgba(148,163,184,.2);border-radius:16px;padding:18px;box-shadow:0 10px 35px rgba(0,0,0,.35);}
+    .q-badge{padding:6px 10px;border-radius:999px;color:#fff;font-weight:700}
+    .q-badge[data-level="Knowledge"]{background:var(--blue)}
+    .q-badge[data-level="Comprehension"]{background:var(--green)}
+    .q-badge[data-level="Application"]{background:var(--yellow); color:#111827}
+    .q-badge[data-level="Higher"]{background:var(--red)}
+    .qtext{font-size:18px;line-height:1.55;margin:10px 0 12px}
+    .options{display:grid;gap:10px}
+    .opt{display:flex;gap:10px;padding:12px;border:1px solid rgba(148,163,184,.25);border-radius:12px;background:rgba(2,6,23,.4);cursor:pointer}
+    .nav{display:flex;justify-content:space-between;align-items:center;margin-top:14px}
+    button{appearance:none;border:none;border-radius:12px;padding:10px 14px;font-weight:700;cursor:pointer;background:linear-gradient(180deg,#22d3ee,#1ea7be);color:#042026;box-shadow:0 10px 25px rgba(34,211,238,.3)}
+    button.secondary{background:rgba(148,163,184,.15);color:var(--text);box-shadow:none;border:1px solid rgba(148,163,184,.25)}
+    button.danger{background:linear-gradient(180deg,#f43f5e,#e11d48);color:#fff}
+    .small{font-size:13px;color:var(--muted)}
+    .hidden{display:none!important}
+    .results{display:grid;gap:16px}
+    .grid2{display:grid;grid-template-columns:1fr;gap:16px}
+    @media(min-width:900px){ .grid2{grid-template-columns:1.2fr .8fr} }
+    table{width:100%;border-collapse:collapse;border-radius:12px;overflow:hidden}
+    th,td{padding:10px 12px;border-bottom:1px solid rgba(148,163,184,.2);text-align:left}
+    th{background:rgba(148,163,184,.15)}
+    .ok{color:#22c55e;font-weight:700}.bad{color:#f43f5e;font-weight:700}.neutral{color:#eab308;font-weight:700}
+    canvas{background:rgba(255,255,255,.03);border:1px dashed rgba(148,163,184,.25);border-radius:12px}
+    footer{position:fixed;bottom:0;left:0;right:0;background:rgba(11,16,32,.85);backdrop-filter:blur(8px);border-top:1px solid rgba(148,163,184,.18)}
+    .footer-inner{max-width:1000px;margin:0 auto;display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 16px}
+    .legend span{padding:6px 10px;border-radius:999px;border:1px solid rgba(148,163,184,.2)}
+    .l-blue{background:var(--blue);color:#fff}.l-green{background:var(--green);color:#fff}.l-yellow{background:var(--yellow);color:#111827}.l-red{background:var(--red);color:#fff}
+    .mini{display:flex;align-items:center;gap:8px}
+    .mini canvas{width:200px;height:70px}
+    @media print { header, footer, .nav, .meta, .legend {display:none !important} body{background:#fff;color:#111827} .card{border:1px solid #ddd;box-shadow:none} }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>Advanced HTML Quiz · অধ্যায় ১: সেট ও ফাংশন</h1>
+      <div class="meta">
+        <span class="pill">⏳ টাইমার: <span class="timer" id="timer">90:00</span></span>
+        <span class="pill">🔀 শাফল অন</span>
+        <span class="pill">➖ ভুলে −0.25</span>
+        <span class="pill">💾 অটো-সেভ</span>
+        <button class="secondary" id="pdfBtn">🖨 PDF</button>
+      </div>
+      <div class="progress"><div id="bar"></div></div>
+    </div>
+  </header>
+  <main class="wrap">
+    <section id="quiz-card" class="card">
+      <div class="question-header" style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+        <div>
+          <div id="qBadge" class="q-badge" data-level="Knowledge">Knowledge</div>
+          <div class="small">প্রশ্ন <span id="qNum">1</span> / <span id="qTotal">100</span></div>
+        </div>
+        <div class="mini">
+          <span class="small">প্রশ্ন-পর প্রশ্ন ছোট চার্ট</span>
+          <canvas id="mini" width="200" height="70"></canvas>
+        </div>
+      </div>
+      <div class="qtext" id="qText">Loading…</div>
+      <div class="options" id="options"></div>
+      <div class="nav">
+        <button class="secondary" id="prevBtn">⬅ পূর্বের</button>
+        <div>
+          <button class="secondary" id="resetBtn">🔄 রিসেট</button>
+          <button class="secondary" id="saveBtn">💾 সেভ</button>
+        </div>
+        <button id="nextBtn">পরবর্তী ➡</button>
+      </div>
+    </section>
+
+    <section id="results" class="card hidden">
+      <div class="results">
+        <div class="grid2">
+          <div>
+            <h2>📋 ফলাফল ও রিপোর্ট</h2>
+            <table>
+              <tbody>
+                <tr><th>মোট প্রশ্ন</th><td id="sumTotal">—</td></tr>
+                <tr><th>সঠিক</th><td id="sumRight">—</td></tr>
+                <tr><th>ভুল</th><td id="sumWrong">—</td></tr>
+                <tr><th>ফাঁকা</th><td id="sumBlank">—</td></tr>
+                <tr><th>নেগেটিভ</th><td id="sumNeg">—</td></tr>
+                <tr><th>ফাইনাল স্কোর</th><td id="sumScore">—</td></tr>
+                <tr><th>সময় লেগেছে</th><td id="sumTime">—</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <h3>📊 Bloom স্তরভিত্তিক চার্ট</h3>
+            <canvas id="chart" width="500" height="320"></canvas>
+          </div>
+        </div>
+        <h3>ব্যাখ্যাসহ উত্তর তালিকা</h3>
+        <table>
+          <thead><tr><th>#</th><th>স্তর</th><th>প্রশ্ন</th><th>আপনার</th><th>সঠিক</th><th>স্ট্যাটাস</th><th>ব্যাখ্যা</th></tr></thead>
+          <tbody id="expBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <div class="footer-inner">
+      <div class="legend">
+        <span class="l-blue">🔵 জ্ঞানমূলক</span>
+        <span class="l-green">🟢 অনুধাবন</span>
+        <span class="l-yellow">🟡 প্রয়োগ</span>
+        <span class="l-red">🔴 উচ্চতর</span>
+      </div>
+      <button id="submitBtn" class="danger">✅ সাবমিট</button>
+    </div>
+  </footer>
+  <script>
+    const STORAGE_KEY = "ch1_sets_functions_quiz_v1";
+    const QUESTIONS = [{"level": "Knowledge", "text": "ডি-মরগ্যানের সূত্র: (A ∪ B)ᶜ =", "options": ["Aᶜ ∩ Bᶜ", "Aᶜ ∪ Bᶜ", "A ∩ B", "Aᶜ ∩ B"], "correct": 0, "expl": "ডি-মরগ্যান: (∪)ᶜ ⇒ ∩ কমপ্লিমেন্ট।"}, {"level": "Knowledge", "text": "ডি-মরগ্যানের সূত্র: (A ∩ B)ᶜ =", "options": ["Aᶜ ∪ Bᶜ", "Aᶜ ∩ Bᶜ", "A ∪ B", "A ∩ Bᶜ"], "correct": 0, "expl": "ডি-মরগ্যান: (∩)ᶜ ⇒ ∪ কমপ্লিমেন্ট।"}, {"level": "Knowledge", "text": "সিমেট্রিক ডিফারেন্স A Δ B =", "options": ["(A\\B) ∪ (B\\A)", "(A∩B)ᶜ", "(A∪B)\\(A∩Bᶜ)", "A∩B"], "correct": 0, "expl": "সংজ্ঞা।"}, {"level": "Knowledge", "text": "ডিস্ট্রিবিউটিভ: A ∩ (B ∪ C) =", "options": ["(A∩B) ∪ (A∩C)", "(A∪B) ∩ (A∪C)", "A∪B∪C", "A∩B∩C"], "correct": 0, "expl": "বিতরণ সূত্র।"}, {"level": "Knowledge", "text": "ডিস্ট্রিবিউটিভ: A ∪ (B ∩ C) =", "options": ["(A∪B) ∩ (A∪C)", "(A∩B) ∪ (A∩C)", "A∩B∩C", "A∪B∪C"], "correct": 0, "expl": "বিতরণ সূত্র।"}, {"level": "Knowledge", "text": "কার্ডিনালিটি: সীমিত সেটে |A∪B| =", "options": ["|A|+|B|−|A∩B|", "|A|+|B|", "|A|−|B|+|A∩B|", "|A∩B|"], "correct": 0, "expl": "ইনক্লুশন-এক্সক্লুশন।"}, {"level": "Knowledge", "text": "পাওয়ার সেটের আকার |𝒫(A)| =", "options": ["²|A|", "²|A|", "³|A|", "উপরের কোনোটিই নয়"], "correct": 0, "expl": "𝒫(A) তে 2^{|A|} উপসেট।"}, {"level": "Knowledge", "text": "ফাংশন সংখ্যা: |A|=m, |B|=n ⇒ A→B ফাংশন সংখ্যা =", "options": ["ⁿᵐ", "mⁿ", "n!", "m!"], "correct": 0, "expl": "প্রতি a∈A এর জন্য nটি পছন্দ ⇒ n^m।"}, {"level": "Knowledge", "text": "ইনজেক্টিভ সংখ্যা (n≥m): A→B =", "options": ["nP m = n!/(n−m)!", "nC m", "mP n", "n^m"], "correct": 0, "expl": "সব a-গুলিকে পৃথক ইমেজে পাঠাতে বিন্যাস।"}, {"level": "Knowledge", "text": "(f∘g)⁻¹ =", "options": ["g⁻¹ ∘ f⁻¹", "f⁻¹ ∘ g⁻¹", "(f⁻¹ ∘ g)⁻¹", "উপরের কোনোটিই নয়"], "correct": 0, "expl": "ইনভার্সের ক্রম উল্টো।"}, {"level": "Knowledge", "text": "ইমেজ: f(A∪B) =", "options": ["f(A) ∪ f(B)", "f(A) ∩ f(B)", "f(A)", "f(B)"], "correct": 0, "expl": "ইউনিয়ন ইমেজে সংরক্ষিত।"}, {"level": "Knowledge", "text": "প্রিইমেজ: f⁻¹(Y₁∪Y₂) =", "options": ["f⁻¹(Y₁) ∪ f⁻¹(Y₂)", "f⁻¹(Y₁) ∩ f⁻¹(Y₂)", "শূন্য", "Y₁∪Y₂"], "correct": 0, "expl": "প্রিইমেজ ∪ ধরে।"}, {"level": "Knowledge", "text": "প্রিইমেজ: f⁻¹(Yᶜ) =", "options": ["(f⁻¹(Y))ᶜ", "f⁻¹(Y)", "Yᶜ", "f(Yᶜ)"], "correct": 0, "expl": "প্রিইমেজে কমপ্লিমেন্ট সংরক্ষিত।"}, {"level": "Knowledge", "text": "বায়েজেকশন সংজ্ঞা", "options": ["ইনজেক্টিভ ও সারজেক্টিভ দুটোই", "শুধু ইনজেক্টিভ", "শুধু সারজেক্টিভ", "উপরের কোনোটিই নয়"], "correct": 0, "expl": "দুটি বৈশিষ্ট্য একত্রে।"}, {"level": "Knowledge", "text": "মোনোটনিক বৃদ্ধি ফাংশন", "options": ["ইনজেক্টিভ (interval এ)", "সারজেক্টিভ", "অবশ্যম্ভাবী বায়েজেক্টিভ", "নয়"], "correct": 0, "expl": "Interval-এ strictly monotone ⇒ one-to-one।"}, {"level": "Knowledge", "text": "কম্পোজিশন", "options": ["অ্যাসোসিয়েটিভ", "কমিউটেটিভ", "উভয়ই", "কোনোটিই নয়"], "correct": 0, "expl": "f∘(g∘h)=(f∘g)∘h; সাধারণত কমিউটেটিভ নয়।"}, {"level": "Knowledge", "text": "ইনভার্স অস্তিত্ব", "options": ["ফাংশন ইনজেক্টিভ ও সারজেক্টিভ হলে", "শুধু ইনজেক্টিভ হলে", "শুধু সারজেক্টিভ হলে", "ডোমেইন ফাইনাইট হলে"], "correct": 0, "expl": "বায়েজেক্টিভ হলেই একমাত্র ইনভার্স।"}, {"level": "Knowledge", "text": "ডোমেইন", "options": ["ইনপুট সেট", "আউটপুট সেট", "উভয়ই", "কোনোটিই নয়"], "correct": 0, "expl": "সংজ্ঞা।"}, {"level": "Knowledge", "text": "রেঞ্জ", "options": ["আসল আউটপুটের সেট", "সম্ভাব্য সব আউটপুট (কোডোমেইন)", "ডোমেইন", "ছেদ"], "correct": 0, "expl": "রেঞ্জ ⊆ কোডোমেইন।"}, {"level": "Comprehension", "text": "|A|=7, |B|=5, |A∩B|=2 ⇒ |A∪B| =", "options": ["10", "12", "7", "5"], "correct": 0, "expl": "|A|+|B|−|A∩B|=7+5−2=10।"}, {"level": "Comprehension", "text": "(A\\B) ∩ B =", "options": ["∅", "A", "B", "A∩B"], "correct": 0, "expl": "(A\\B)-তে B এর কোনো সদস্য নেই।"}, {"level": "Comprehension", "text": "A⊂B ⇒ A∩B =", "options": ["A", "B", "∅", "U"], "correct": 0, "expl": "উপসেট হলে ছেদ A।"}, {"level": "Comprehension", "text": "A⊂B ⇒ A∪B =", "options": ["B", "A", "∅", "U"], "correct": 0, "expl": "উপসেট হলে ঐক্য B।"}, {"level": "Comprehension", "text": "f(x)=x², f:R→R ⇒", "options": ["ইনজেক্টিভ নয়, সারজেক্টিভ নয়", "ইনজেক্টিভ, সারজেক্টিভ নয়", "ইনজেক্টিভ নয়, সারজেক্টিভ", "উভয়ই"], "correct": 0, "expl": "নেগেটিভ রেঞ্জ নেই; ±x একই ইমেজ।"}, {"level": "Comprehension", "text": "f(x)=x², f:R→[0,∞) ⇒", "options": ["ইনজেক্টিভ নয়, সারজেক্টিভ", "ইনজেক্টিভ, সারজেক্টিভ", "উভয়ই নয়", "শুধু ইনজেক্টিভ"], "correct": 0, "expl": "এবার onto; তবে 1→±1।"}, {"level": "Comprehension", "text": "g(x)=2x+1, R→R ⇒ g⁻¹(x) =", "options": ["(x−1)/2", "(x+1)/2", "2x−1", "1/(2x)"], "correct": 0, "expl": "রৈখিক ইনভার্স।"}, {"level": "Comprehension", "text": "ইমেজ ছেদ: f(A∩B) ⊆", "options": ["f(A) ∩ f(B)", "f(A) ∪ f(B)", "f(A)", "f(B)"], "correct": 0, "expl": "সবসময় উপসেট; সমতা নয়।"}, {"level": "Comprehension", "text": "প্রিইমেজ ছেদ: f⁻¹(Y₁∩Y₂) =", "options": ["f⁻¹(Y₁) ∩ f⁻¹(Y₂)", "f⁻¹(Y₁) ∪ f⁻¹(Y₂)", "শূন্য", "Y₁"], "correct": 0, "expl": "প্রিইমেজ ∩ ধরে।"}, {"level": "Comprehension", "text": "f∘g কমিউটেটিভ কি?", "options": ["সাধারণত নয়", "সবসময়", "ডোমেইন ফাইনাইট হলে", "কোথাও নয়"], "correct": 0, "expl": "সাধারণত g∘f ≠ f∘g।"}, {"level": "Application", "text": "|A|=8, |B|=8, |A∩B|=5 ⇒ |A∪B| =", "options": ["11", "16", "8", "21"], "correct": 0, "expl": "|A∪B|=|A|+|B|−|A∩B|=8+8−5=11।"}, {"level": "Application", "text": "|A|=6 ⇒ |𝒫(A)| =", "options": ["64", "12", "36", "32"], "correct": 0, "expl": "পাওয়ার সেটে উপসেটের সংখ্যা 2ⁿ=64।"}, {"level": "Application", "text": "|A|=2, |B|=7 ⇒ A→B ফাংশনের সংখ্যা", "options": ["49", "128", "n!", "m!"], "correct": 0, "expl": "প্রতি input-এ nটি পছন্দ ⇒ n^m।"}, {"level": "Application", "text": "|A|=3, |B|=7 ⇒ ইনজেক্টিভ A→B ফাংশনের সংখ্যা", "options": ["210", "343", "2187", "210·3"], "correct": 0, "expl": "ভিন্ন ইমেজে পাঠাতে nP m।"}, {"level": "Application", "text": "|A|=|B|=4 ⇒ বায়েজেকশনের সংখ্যা", "options": ["24", "256", "16", "6"], "correct": 0, "expl": "বায়েজেকশন ↔ পারমুটেশন ⇒ n!।"}, {"level": "Application", "text": "f(x)=3x+4, g(x)=x²−3 ⇒ (f∘g)(x)", "options": ["3x² + (-5)", "3x + 4x²", "x² + 3x + 4", "3x² + 3 + 4"], "correct": 0, "expl": "f(g(x))=3(x²−3)+4 = 3x² + (-5)।"}, {"level": "Application", "text": "প্রিইমেজের ক্ষেত্রে সঠিকটি কোনটি?", "options": ["f⁻¹(Y₁∪Y₂)=f⁻¹(Y₁) ∪ f⁻¹(Y₂)", "f⁻¹(Y₁∪Y₂)=f⁻¹(Y₁) ∩ f⁻¹(Y₂)", "f(Y₁∪Y₂)=f(Y₁)∩f(Y₂)", "f(Y₁∩Y₂)=f(Y₁)∪f(Y₂)"], "correct": 0, "expl": "প্রিইমেজ ∪ ঠিকভাবে ধরে।"}, {"level": "Application", "text": "ইমেজের ক্ষেত্রে সঠিকটি", "options": ["f(A∩B) ⊆ f(A) ∩ f(B)", "f(A∩B)= f(A) ∩ f(B) সবসময়", "f(A∩B) ⊇ f(A) ∩ f(B)", "উপরের কোনোটিই নয়"], "correct": 0, "expl": "শুধু subset; equality দরকার নয়।"}, {"level": "Application", "text": "f,g বায়েজেক্টিভ হলে (f∘g)⁻¹ =", "options": ["g⁻¹ ∘ f⁻¹", "f⁻¹ ∘ g⁻¹", "f ∘ g", "g ∘ f"], "correct": 0, "expl": "ইনভার্সে ক্রম উল্টো।"}, {"level": "Application", "text": "f(x)=x³ একটি—", "options": ["বিজোড় (odd) ফাংশন", "জোড় (even) ফাংশন", "কোনোটিই নয়", "উভয়ই"], "correct": 0, "expl": "f(−x)=−x³=−f(x) ⇒ odd।"}, {"level": "Higher", "text": "прমাণ-ধাঁচ: (A ∪ B)\\(A ∩ B) = (A\\B) ∪ (B\\A) — সবচেয়ে কার্যকর কৌশল", "options": ["উভয় দিক ⊆ দেখানো (double inclusion)", "কার্ডিনালিটি তুলনা", "বিরোধাভাস", "কাউন্টার এক্সাম্পল"], "correct": 0, "expl": "সমতা প্রমাণে প্রচলিত পদ্ধতি double inclusion।"}, {"level": "Higher", "text": "f:A→B ইনজেক্টিভ হলে A₁⊆A₂ ⇒ f(A₁) ⊆ f(A₂) ও f(A₁∩A₂)=f(A₁)∩f(A₂)?", "options": ["প্রথমটি সবসময় সত্য; দ্বিতীয়টি নয়", "উভয়ই সত্য", "উভয়ই মিথ্যা", "শুধু দ্বিতীয়টি সত্য"], "correct": 0, "expl": "ইমেজ মনোটোনিক; কিন্তু intersection-এ equality নয় (counterexample আছে)।"}, {"level": "Higher", "text": "g:B→C সারজেক্টিভ। f∘g ইনজেক্টিভ ⇒ f ইনজেক্টিভ?", "options": ["হ্যাঁ", "না", "শুধু finite হলে", "শুধু bijective হলে"], "correct": 0, "expl": "g surjective হলে g-এর ইমেজ = B; f∘g injective ⇒ f injective দরকার।"}, {"level": "Higher", "text": "f গুলো বায়েজেক্টিভ। প্রমাণ করুন: (f∘g)⁻¹ = g⁻¹∘f⁻¹ — কোন বৈশিষ্ট্য মূল", "options": ["কম্পোজিশনের অ্যাসোসিয়েটিভিটি ও ইনভার্সের একমাত্রতা", "কমিউটেটিভিটি", "ডিস্ট্রিবিউটিভিটি", "কার্ডিনালিটি"], "correct": 0, "expl": "ইনভার্সের সংজ্ঞা ও এককত্ব, এবং ∘ এর অ্যাসোসিয়েটিভিটি।"}, {"level": "Higher", "text": "|A|=m, |B|=n (n≥m). কতগুলি ইনজেক্টিভ ফাংশন?", "options": ["nP m", "nC m", "mP n", "n^m"], "correct": 0, "expl": "ইনজেক্টিভ ম্যাপ ↔ m-টিকে পৃথক n স্থানে বসানো: n!/(n−m)!।"}, {"level": "Higher", "text": "A,B,C সেট; প্রমাণ বা কাউন্টারউদাহরণ: f(A∩B∩C)=f(A)∩f(B)∩f(C)", "options": ["সাধারণত ⊆; সমতা নয়", "সবসময় সমতা", "সবসময় ⊇", "উপরের কোনোটিই নয়"], "correct": 0, "expl": "ইমেজে ∩ সাধারণত মাত্র subset।"}, {"level": "Higher", "text": "R→R f(x)=x³−3x মোনোটনিক?", "options": ["না, তাই bijective নয়", "হ্যাঁ", "শুধু [0,∞) তে", "শুধু (−∞,0] তে"], "correct": 0, "expl": "ডেরিভেটিভ 3x²−3 শূন্য হয়; monotone নয় পুরো R-এ।"}, {"level": "Higher", "text": "f:R→R, f(x)=ax+b (a≠0) ⇒", "options": ["বায়েজেক্টিভ; ইনভার্স (x−b)/a", "শুধু ইনজেক্টিভ", "শুধু সারজেক্টিভ", "কোনোটিই নয়"], "correct": 0, "expl": "রৈখিক a≠0 ⇒ এক-এক ও onto।"}, {"level": "Higher", "text": "|A|=m, |B|=n. সারজেক্টিভ ফাংশন সংখ্যা? (উত্তরের ধরন)", "options": ["∑_{k=0}^{m} (−1)^{k} C(n,k) (n−k)^{m}", "n^m", "nP m", "m!"], "correct": 0, "expl": "ইনক্লুশন-এক্সক্লুশন/স্টার্লিং ফর্ম; সূত্রের কাঠামো চিনুন।"}, {"level": "Higher", "text": "বাইনারি রিলেশন R⊆A×A ফাংশন হবে কবে?", "options": ["প্রতি a∈A এর জন্য ঠিক একটি ইমেজ", "কমপক্ষে একটি ইমেজ", "সর্বোচ্চ একটি ইমেজ", "উপরের কোনোটিই নয়"], "correct": 0, "expl": "একক মান নীতি: exactly one।"}, {"level": "Application", "text": "|A|=4, |B|=7 ⇒ ইনজেক্টিভ A→B ফাংশনের সংখ্যা", "options": ["840", "2401", "16384", "840·4"], "correct": 0, "expl": "ভিন্ন ইমেজে পাঠাতে nP m।"}, {"level": "Application", "text": "|A|=5 ⇒ |𝒫(A)| =", "options": ["32", "10", "25", "16"], "correct": 0, "expl": "পাওয়ার সেটে উপসেটের সংখ্যা 2ⁿ=32।"}, {"level": "Application", "text": "|A|=3, |B|=3 ⇒ ইনজেক্টিভ A→B ফাংশনের সংখ্যা", "options": ["6", "27", "27", "6·3"], "correct": 0, "expl": "ভিন্ন ইমেজে পাঠাতে nP m।"}, {"level": "Application", "text": "ইমেজের ক্ষেত্রে সঠিকটি", "options": ["f(A∩B) ⊆ f(A) ∩ f(B)", "f(A∩B)= f(A) ∩ f(B) সবসময়", "f(A∩B) ⊇ f(A) ∩ f(B)", "উপরের কোনোটিই নয়"], "correct": 0, "expl": "শুধু subset; equality দরকার নয়।"}, {"level": "Application", "text": "f,g বায়েজেক্টিভ হলে (f∘g)⁻¹ =", "options": ["g⁻¹ ∘ f⁻¹", "f⁻¹ ∘ g⁻¹", "f ∘ g", "g ∘ f"], "correct": 0, "expl": "ইনভার্সে ক্রম উল্টো।"}, {"level": "Application", "text": "f(x)=2x+4, g(x)=x²−2 ⇒ (f∘g)(x)", "options": ["2x² + (0)", "2x + 4x²", "x² + 2x + 4", "2x² + 2 + 4"], "correct": 0, "expl": "f(g(x))=2(x²−2)+4 = 2x² + (0)।"}, {"level": "Application", "text": "f(x)=2x+4, g(x)=x²−2 ⇒ (f∘g)(x)", "options": ["2x² + (0)", "2x + 4x²", "x² + 2x + 4", "2x² + 2 + 4"], "correct": 0, "expl": "f(g(x))=2(x²−2)+4 = 2x² + (0)।"}, {"level": "Application", "text": "প্রিইমেজের ক্ষেত্রে সঠিকটি কোনটি?", "options": ["f⁻¹(Y₁∪Y₂)=f⁻¹(Y₁) ∪ f⁻¹(Y₂)", "f⁻¹(Y₁∪Y₂)=f⁻¹(Y₁) ∩ f⁻¹(Y₂)", "f(Y₁∪Y₂)=f(Y₁)∩f(Y₂)", "f(Y₁∩Y₂)=f(Y₁)∪f(Y₂)"], "correct": 0, "expl": "প্রিইমেজ ∪ ঠিকভাবে ধরে।"}, {"level": "Application", "text": "|A|=2, |B|=5 ⇒ ইনজেক্টিভ A→B ফাংশনের সংখ্যা", "options": ["20", "25", "32", "20·2"], "correct": 0, "expl": "ভিন্ন ইমেজে পাঠাতে nP m।"}, {"level": "Application", "text": "ইমেজের ক্ষেত্রে সঠিকটি", "options": ["f(A∩B) ⊆ f(A) ∩ f(B)", "f(A∩B)= f(A) ∩ f(B) সবসময়", "f(A∩B) ⊇ f(A) ∩ f(B)", "উপরের কোনোটিই নয়"], "correct": 0, "expl": "শুধু subset; equality দরকার নয়।"}, {"level": "Application", "text": "|A|=|B|=4 ⇒ বায়েজেকশনের সংখ্যা", "options": ["24", "256", "16", "6"], "correct": 0, "expl": "বায়েজেকশন ↔ পারমুটেশন ⇒ n!।"}, {"level": "Application", "text": "|A|=8 ⇒ |𝒫(A)| =", "options": ["256", "16", "64", "128"], "correct": 0, "expl": "পাওয়ার সেটে উপসেটের সংখ্যা 2ⁿ=256।"}, {"level": "Application", "text": "f(x)=x³ একটি—", "options": ["বিজোড় (odd) ফাংশন", "জোড় (even) ফাংশন", "কোনোটিই নয়", "উভয়ই"], "correct": 0, "expl": "f(−x)=−x³=−f(x) ⇒ odd।"}, {"level": "Application", "text": "f(x)=3x+4, g(x)=x²−3 ⇒ (f∘g)(x)", "options": ["3x² + (-5)", "3x + 4x²", "x² + 3x + 4", "3x² + 3 + 4"], "correct": 0, "expl": "f(g(x))=3(x²−3)+4 = 3x² + (-5)।"}, {"level": "Application", "text": "প্রিইমেজের ক্ষেত্রে সঠিকটি কোনটি?", "options": ["f⁻¹(Y₁∪Y₂)=f⁻¹(Y₁) ∪ f⁻¹(Y₂)", "f⁻¹(Y₁∪Y₂)=f⁻¹(Y₁) ∩ f⁻¹(Y₂)", "f(Y₁∪Y₂)=f(Y₁)∩f(Y₂)", "f(Y₁∩Y₂)=f(Y₁)∪f(Y₂)"], "correct": 0, "expl": "প্রিইমেজ ∪ ঠিকভাবে ধরে।"}, {"level": "Application", "text": "|A|=5, |B|=5 ⇒ ইনজেক্টিভ A→B ফাংশনের সংখ্যা", "options": ["120", "3125", "3125", "120·5"], "correct": 0, "expl": "ভিন্ন ইমেজে পাঠাতে nP m।"}, {"level": "Application", "text": "প্রিইমেজের ক্ষেত্রে সঠিকটি কোনটি?", "options": ["f⁻¹(Y₁∪Y₂)=f⁻¹(Y₁) ∪ f⁻¹(Y₂)", "f⁻¹(Y₁∪Y₂)=f⁻¹(Y₁) ∩ f⁻¹(Y₂)", "f(Y₁∪Y₂)=f(Y₁)∩f(Y₂)", "f(Y₁∩Y₂)=f(Y₁)∪f(Y₂)"], "correct": 0, "expl": "প্রিইমেজ ∪ ঠিকভাবে ধরে।"}, {"level": "Application", "text": "প্রিইমেজের ক্ষেত্রে সঠিকটি কোনটি?", "options": ["f⁻¹(Y₁∪Y₂)=f⁻¹(Y₁) ∪ f⁻¹(Y₂)", "f⁻¹(Y₁∪Y₂)=f⁻¹(Y₁) ∩ f⁻¹(Y₂)", "f(Y₁∪Y₂)=f(Y₁)∩f(Y₂)", "f(Y₁∩Y₂)=f(Y₁)∪f(Y₂)"], "correct": 0, "expl": "প্রিইমেজ ∪ ঠিকভাবে ধরে।"}, {"level": "Application", "text": "|A|=12, |B|=5, |A∩B|=4 ⇒ |A∪B| =", "options": ["13", "17", "12", "21"], "correct": 0, "expl": "|A∪B|=|A|+|B|−|A∩B|=12+5−4=13।"}, {"level": "Application", "text": "|A|=5 ⇒ |𝒫(A)| =", "options": ["32", "10", "25", "16"], "correct": 0, "expl": "পাওয়ার সেটে উপসেটের সংখ্যা 2ⁿ=32।"}, {"level": "Application", "text": "|A|=10, |B|=9, |A∩B|=5 ⇒ |A∪B| =", "options": ["14", "19", "10", "24"], "correct": 0, "expl": "|A∪B|=|A|+|B|−|A∩B|=10+9−5=14।"}, {"level": "Application", "text": "|A|=9, |B|=8, |A∩B|=2 ⇒ |A∪B| =", "options": ["15", "17", "9", "19"], "correct": 0, "expl": "|A∪B|=|A|+|B|−|A∩B|=9+8−2=15।"}, {"level": "Application", "text": "|A|=11, |B|=5, |A∩B|=2 ⇒ |A∪B| =", "options": ["14", "16", "11", "18"], "correct": 0, "expl": "|A∪B|=|A|+|B|−|A∩B|=11+5−2=14।"}, {"level": "Application", "text": "|A|=4 ⇒ |𝒫(A)| =", "options": ["16", "8", "16", "8"], "correct": 0, "expl": "পাওয়ার সেটে উপসেটের সংখ্যা 2ⁿ=16।"}, {"level": "Application", "text": "প্রিইমেজের ক্ষেত্রে সঠিকটি কোনটি?", "options": ["f⁻¹(Y₁∪Y₂)=f⁻¹(Y₁) ∪ f⁻¹(Y₂)", "f⁻¹(Y₁∪Y₂)=f⁻¹(Y₁) ∩ f⁻¹(Y₂)", "f(Y₁∪Y₂)=f(Y₁)∩f(Y₂)", "f(Y₁∩Y₂)=f(Y₁)∪f(Y₂)"], "correct": 0, "expl": "প্রিইমেজ ∪ ঠিকভাবে ধরে।"}, {"level": "Application", "text": "f(x)=5x+4, g(x)=x²−5 ⇒ (f∘g)(x)", "options": ["5x² + (-21)", "5x + 4x²", "x² + 5x + 4", "5x² + 5 + 4"], "correct": 0, "expl": "f(g(x))=5(x²−5)+4 = 5x² + (-21)।"}, {"level": "Knowledge", "text": "কার্ডিনালিটি: সীমিত সেটে |A∪B| =", "options": ["|A|+|B|−|A∩B|", "|A|+|B|", "|A|−|B|+|A∩B|", "|A∩B|"], "correct": 0, "expl": "ইনক্লুশন-এক্সক্লুশন।"}, {"level": "Knowledge", "text": "কম্পোজিশন", "options": ["অ্যাসোসিয়েটিভ", "কমিউটেটিভ", "উভয়ই", "কোনোটিই নয়"], "correct": 0, "expl": "f∘(g∘h)=(f∘g)∘h; সাধারণত কমিউটেটিভ নয়।"}, {"level": "Knowledge", "text": "ইনভার্স অস্তিত্ব", "options": ["ফাংশন ইনজেক্টিভ ও সারজেক্টিভ হলে", "শুধু ইনজেক্টিভ হলে", "শুধু সারজেক্টিভ হলে", "ডোমেইন ফাইনাইট হলে"], "correct": 0, "expl": "বায়েজেক্টিভ হলেই একমাত্র ইনভার্স।"}, {"level": "Knowledge", "text": "(f∘g)⁻¹ =", "options": ["g⁻¹ ∘ f⁻¹", "f⁻¹ ∘ g⁻¹", "(f⁻¹ ∘ g)⁻¹", "উপরের কোনোটিই নয়"], "correct": 0, "expl": "ইনভার্সের ক্রম উল্টো।"}, {"level": "Knowledge", "text": "কার্ডিনালিটি: সীমিত সেটে |A∪B| =", "options": ["|A|+|B|−|A∩B|", "|A|+|B|", "|A|−|B|+|A∩B|", "|A∩B|"], "correct": 0, "expl": "ইনক্লুশন-এক্সক্লুশন।"}, {"level": "Comprehension", "text": "প্রিইমেজ ছেদ: f⁻¹(Y₁∩Y₂) =", "options": ["f⁻¹(Y₁) ∩ f⁻¹(Y₂)", "f⁻¹(Y₁) ∪ f⁻¹(Y₂)", "শূন্য", "Y₁"], "correct": 0, "expl": "প্রিইমেজ ∩ ধরে।"}, {"level": "Comprehension", "text": "|A|=7, |B|=5, |A∩B|=2 ⇒ |A∪B| =", "options": ["10", "12", "7", "5"], "correct": 0, "expl": "|A|+|B|−|A∩B|=7+5−2=10।"}, {"level": "Comprehension", "text": "(A\\B) ∩ B =", "options": ["∅", "A", "B", "A∩B"], "correct": 0, "expl": "(A\\B)-তে B এর কোনো সদস্য নেই।"}, {"level": "Comprehension", "text": "(A\\B) ∩ B =", "options": ["∅", "A", "B", "A∩B"], "correct": 0, "expl": "(A\\B)-তে B এর কোনো সদস্য নেই।"}, {"level": "Comprehension", "text": "|A|=7, |B|=5, |A∩B|=2 ⇒ |A∪B| =", "options": ["10", "12", "7", "5"], "correct": 0, "expl": "|A|+|B|−|A∩B|=7+5−2=10।"}, {"level": "Comprehension", "text": "f∘g কমিউটেটিভ কি?", "options": ["সাধারণত নয়", "সবসময়", "ডোমেইন ফাইনাইট হলে", "কোথাও নয়"], "correct": 0, "expl": "সাধারণত g∘f ≠ f∘g।"}, {"level": "Comprehension", "text": "f(x)=x², f:R→[0,∞) ⇒", "options": ["ইনজেক্টিভ নয়, সারজেক্টিভ", "ইনজেক্টিভ, সারজেক্টিভ", "উভয়ই নয়", "শুধু ইনজেক্টিভ"], "correct": 0, "expl": "এবার onto; তবে 1→±1।"}, {"level": "Comprehension", "text": "প্রিইমেজ ছেদ: f⁻¹(Y₁∩Y₂) =", "options": ["f⁻¹(Y₁) ∩ f⁻¹(Y₂)", "f⁻¹(Y₁) ∪ f⁻¹(Y₂)", "শূন্য", "Y₁"], "correct": 0, "expl": "প্রিইমেজ ∩ ধরে।"}, {"level": "Comprehension", "text": "ইমেজ ছেদ: f(A∩B) ⊆", "options": ["f(A) ∩ f(B)", "f(A) ∪ f(B)", "f(A)", "f(B)"], "correct": 0, "expl": "সবসময় উপসেট; সমতা নয়।"}, {"level": "Comprehension", "text": "(A\\B) ∩ B =", "options": ["∅", "A", "B", "A∩B"], "correct": 0, "expl": "(A\\B)-তে B এর কোনো সদস্য নেই।"}, {"level": "Higher", "text": "বাইনারি রিলেশন R⊆A×A ফাংশন হবে কবে?", "options": ["প্রতি a∈A এর জন্য ঠিক একটি ইমেজ", "কমপক্ষে একটি ইমেজ", "সর্বোচ্চ একটি ইমেজ", "উপরের কোনোটিই নয়"], "correct": 0, "expl": "একক মান নীতি: exactly one।"}, {"level": "Higher", "text": "বাইনারি রিলেশন R⊆A×A ফাংশন হবে কবে?", "options": ["প্রতি a∈A এর জন্য ঠিক একটি ইমেজ", "কমপক্ষে একটি ইমেজ", "সর্বোচ্চ একটি ইমেজ", "উপরের কোনোটিই নয়"], "correct": 0, "expl": "একক মান নীতি: exactly one।"}, {"level": "Higher", "text": "f:R→R, f(x)=ax+b (a≠0) ⇒", "options": ["বায়েজেক্টিভ; ইনভার্স (x−b)/a", "শুধু ইনজেক্টিভ", "শুধু সারজেক্টিভ", "কোনোটিই নয়"], "correct": 0, "expl": "রৈখিক a≠0 ⇒ এক-এক ও onto।"}, {"level": "Higher", "text": "g:B→C সারজেক্টিভ। f∘g ইনজেক্টিভ ⇒ f ইনজেক্টিভ?", "options": ["হ্যাঁ", "না", "শুধু finite হলে", "শুধু bijective হলে"], "correct": 0, "expl": "g surjective হলে g-এর ইমেজ = B; f∘g injective ⇒ f injective দরকার।"}, {"level": "Higher", "text": "g:B→C সারজেক্টিভ। f∘g ইনজেক্টিভ ⇒ f ইনজেক্টিভ?", "options": ["হ্যাঁ", "না", "শুধু finite হলে", "শুধু bijective হলে"], "correct": 0, "expl": "g surjective হলে g-এর ইমেজ = B; f∘g injective ⇒ f injective দরকার।"}, {"level": "Higher", "text": "f গুলো বায়েজেক্টিভ। প্রমাণ করুন: (f∘g)⁻¹ = g⁻¹∘f⁻¹ — কোন বৈশিষ্ট্য মূল", "options": ["কম্পোজিশনের অ্যাসোসিয়েটিভিটি ও ইনভার্সের একমাত্রতা", "কমিউটেটিভিটি", "ডিস্ট্রিবিউটিভিটি", "কার্ডিনালিটি"], "correct": 0, "expl": "ইনভার্সের সংজ্ঞা ও এককত্ব, এবং ∘ এর অ্যাসোসিয়েটিভিটি।"}, {"level": "Higher", "text": "|A|=m, |B|=n. সারজেক্টিভ ফাংশন সংখ্যা? (উত্তরের ধরন)", "options": ["∑_{k=0}^{m} (−1)^{k} C(n,k) (n−k)^{m}", "n^m", "nP m", "m!"], "correct": 0, "expl": "ইনক্লুশন-এক্সক্লুশন/স্টার্লিং ফর্ম; সূত্রের কাঠামো চিনুন।"}, {"level": "Higher", "text": "f:R→R, f(x)=ax+b (a≠0) ⇒", "options": ["বায়েজেক্টিভ; ইনভার্স (x−b)/a", "শুধু ইনজেক্টিভ", "শুধু সারজেক্টিভ", "কোনোটিই নয়"], "correct": 0, "expl": "রৈখিক a≠0 ⇒ এক-এক ও onto।"}, {"level": "Higher", "text": "g:B→C সারজেক্টিভ। f∘g ইনজেক্টিভ ⇒ f ইনজেক্টিভ?", "options": ["হ্যাঁ", "না", "শুধু finite হলে", "শুধু bijective হলে"], "correct": 0, "expl": "g surjective হলে g-এর ইমেজ = B; f∘g injective ⇒ f injective দরকার।"}, {"level": "Higher", "text": "f:A→B ইনজেক্টিভ হলে A₁⊆A₂ ⇒ f(A₁) ⊆ f(A₂) ও f(A₁∩A₂)=f(A₁)∩f(A₂)?", "options": ["প্রথমটি সবসময় সত্য; দ্বিতীয়টি নয়", "উভয়ই সত্য", "উভয়ই মিথ্যা", "শুধু দ্বিতীয়টি সত্য"], "correct": 0, "expl": "ইমেজ মনোটোনিক; কিন্তু intersection-এ equality নয় (counterexample আছে)।"}];
+    const TOTAL = QUESTIONS.length;
+
+    const $ = s=>document.querySelector(s);
+    const $$ = s=>Array.from(document.querySelectorAll(s));
+
+    let state = {order:[], answers:{}, current:0, remaining: 90*60, finished:false, startedAt: Date.now()};
+
+    function shuffle(arr){ for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]];} return arr; }
+    function formatTime(s){const m=String(Math.floor(s/60)).padStart(2,'0'); const r=String(s%60).padStart(2,'0'); return m+":"+r;}
+
+    function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+    function load(){
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(raw){
+        try{ const obj=JSON.parse(raw); if(Array.isArray(obj.order)){ state = Object.assign(state,obj); } }catch(e){}
+      }
+      if(!state.order || state.order.length!==TOTAL){
+        state.order = shuffle([...Array(TOTAL).keys()]);
+        state.current = 0;
+        state.remaining = 90*60;
+        save();
+      }
+    }
+
+    function renderMini(){
+      const canvas = document.getElementById('mini'); const ctx = canvas.getContext('2d');
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      const answered = Object.keys(state.answers).length;
+      const right = Object.entries(state.answers).filter(([i,a])=>Number(a)===QUESTIONS[Number(i)].correct).length;
+      const wrong = answered - right;
+      const blank = TOTAL - answered;
+      const arr = [right, wrong, blank];
+      const colors = ['#22c55e','#f43f5e','#eab308'];
+      const W=canvas.width, H=canvas.height; const pad=6; const bw=(W-2*pad)/(arr.length*1.5);
+      ctx.strokeStyle='rgba(148,163,184,.5)'; ctx.strokeRect(pad,pad,W-2*pad,H-2*pad);
+      const max=Math.max(...arr,1);
+      arr.forEach((v,i)=>{
+        const x=pad+i*1.5*bw + 6;
+        const h=(v/max)*(H-2*pad-10);
+        ctx.fillStyle=colors[i];
+        ctx.fillRect(x, H-pad-h, bw, h);
+      });
+    }
+
+    function render(){
+      $('#qTotal').textContent = TOTAL;
+      $('#qNum').textContent = state.current+1;
+      $('#bar').style.width = ((state.current)/TOTAL*100)+'%';
+      const qIdx = state.order[state.current];
+      const q = QUESTIONS[qIdx];
+      const badge=$('#qBadge'); badge.dataset.level=q.level; badge.textContent=q.level;
+      $('#qText').innerHTML = q.text;
+      const opts=$('#options'); opts.innerHTML='';
+      q.options.forEach((op,i)=>{
+        const lbl=document.createElement('label'); lbl.className='opt';
+        lbl.innerHTML = `<input type="radio" name="q_${qIdx}" value="${i}"> <div>${op}</div>`;
+        opts.appendChild(lbl);
+      });
+      if(state.answers[qIdx]!=null){
+        const v=String(state.answers[qIdx]); const inp=$(`input[name="q_${qIdx}"][value="${v}"]`); if(inp) inp.checked=true;
+      }
+      $$('#options input[type="radio"]').forEach(inp=>{
+        inp.addEventListener('change',e=>{ state.answers[qIdx]=Number(e.target.value); save(); renderMini(); });
+      });
+      $('#prevBtn').disabled = state.current===0;
+      $('#nextBtn').textContent = state.current===TOTAL-1 ? 'শেষ ➡' : 'পরবর্তী ➡';
+      renderMini();
+    }
+
+    let timer=null;
+    function startTimer(){
+      if(timer) clearInterval(timer);
+      timer = setInterval(()=>{
+        if(state.finished){ clearInterval(timer); return; }
+        state.remaining=Math.max(0, state.remaining-1);
+        $('#timer').textContent = formatTime(state.remaining);
+        if(state.remaining===0){ submit(true); }
+        if(state.remaining%5===0) save();
+      },1000);
+    }
+
+    $('#prevBtn').addEventListener('click',()=>{ if(state.current>0){ state.current--; save(); render(); } });
+    $('#nextBtn').addEventListener('click',()=>{ if(state.current<TOTAL-1){ state.current++; save(); render(); } else { submit(false); } });
+    $('#resetBtn').addEventListener('click',()=>{ if(confirm('সব প্রগ্রেস মুছে ফেলবেন?')){ localStorage.removeItem(STORAGE_KEY); location.reload(); } });
+    $('#saveBtn').addEventListener('click',()=>{ save(); alert('✅ সেভ হয়েছে'); });
+    $('#submitBtn').addEventListener('click',()=> submit(false));
+    $('#pdfBtn').addEventListener('click',()=> window.print());
+
+    function submit(auto){
+      state.finished=true; save(); clearInterval(timer);
+      let right=0, wrong=0, blank=0;
+      const byLevel = {Knowledge:{total:0,right:0}, Comprehension:{total:0,right:0}, Application:{total:0,right:0}, Higher:{total:0,right:0}};
+      const exp=[];
+      QUESTIONS.forEach((q, i)=>{
+        byLevel[q.level].total++;
+        const a = state.answers[i];
+        const corr = q.correct;
+        let status='ফাঁকা', your='—', ok=false;
+        if(a==null){ blank++; }
+        else if(a===corr){ right++; status='সঠিক'; your=q.options[a]; ok=true; }
+        else { wrong++; status='ভুল'; your=q.options[a]; }
+        if(ok) byLevel[q.level].right++;
+        exp.push(`<tr><td>${i+1}</td><td>${q.level}</td><td>${q.text}</td><td>${your}</td><td>${q.options[corr]}</td><td class="${ok?'ok':(a==null?'neutral':'bad')}">${status}</td><td>${q.expl}</td></tr>`);
+      });
+      const score = right - 0.25*wrong;
+      $('#sumTotal').textContent = TOTAL;
+      $('#sumRight').textContent = right;
+      $('#sumWrong').textContent = wrong;
+      $('#sumBlank').textContent = blank;
+      $('#sumNeg').textContent = `−${(0.25*wrong).toFixed(2)}`;
+      $('#sumScore').textContent = `${score.toFixed(2)} / ${TOTAL}`;
+      const used = 90*60 - state.remaining; const m=Math.floor(used/60), s=used%60;
+      $('#sumTime').textContent = `${m} মিনিট ${s} সেকেন্ড`;
+      document.getElementById('expBody').innerHTML = exp.join('');
+
+      document.getElementById('quiz-card').classList.add('hidden');
+      document.getElementById('results').classList.remove('hidden');
+      $('#bar').style.width = '100%';
+      drawChart(byLevel);
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+
+    function drawChart(by){
+      const canvas=document.getElementById('chart'); const ctx=canvas.getContext('2d');
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      const labels=['Knowledge','Comprehension','Application','Higher'];
+      const totals=labels.map(l=>by[l].total), rights=labels.map(l=>by[l].right);
+      const pad=40, W=canvas.width, H=canvas.height; const gw=W-pad*2, gh=H-pad*2;
+      ctx.strokeStyle='rgba(148,163,184,.6)'; ctx.strokeRect(pad,pad,gw,gh);
+      const maxY=Math.max(...totals,1); const barW=gw/(labels.length*3);
+      const styles=getComputedStyle(document.documentElement);
+      const colors={Knowledge:styles.getPropertyValue('--blue').trim(),Comprehension:styles.getPropertyValue('--green').trim(),Application:styles.getPropertyValue('--yellow').trim(),Higher:styles.getPropertyValue('--red').trim()};
+      labels.forEach((lab,i)=>{
+        const x0=pad+i*3*barW+barW*0.5;
+        const t=totals[i], r=rights[i];
+        const htT=t/maxY*gh, htR=r/maxY*gh;
+        ctx.fillStyle='rgba(148,163,184,.35)'; ctx.fillRect(x0, pad+gh-htT, barW*.9, htT);
+        ctx.fillStyle=colors[lab]; ctx.fillRect(x0+barW, pad+gh-htR, barW*.9, htR);
+        ctx.fillStyle='#cbd5e1'; ctx.font='12px sans-serif'; ctx.textAlign='center'; ctx.fillText(lab, x0+barW*.5, H-10);
+      });
+      ctx.fillStyle='#cbd5e1'; ctx.font='12px sans-serif'; ctx.textAlign='left'; ctx.fillText('ফিকে = মোট, রঙিন = সঠিক', pad+8, pad-10);
+    }
+
+    function init(){ load(); render(); startTimer(); }
+    init();
+  </script>
+</body>
+</html>
