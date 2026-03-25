@@ -1,0 +1,248 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Advanced HTML Quiz – অধ্যায় ৫: সমীকরণ</title>
+<style>
+  :root{ --blue:#2563eb; --green:#039855; --yellow:#ca8a04; --red:#dc2626; --bg:#0b1020; --card:#0f172a; --muted:#94a3b8; --text:#e2e8f0; --accent:#22d3ee; }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:ui-sans-serif,-apple-system,Segoe UI,Roboto,'Noto Sans Bengali','Noto Sans','SolaimanLipi',Arial,sans-serif;background:#0b1020;color:var(--text);}
+  header{position:sticky;top:0;z-index:50;background:rgba(11,16,32,.75);backdrop-filter:blur(8px);border-bottom:1px solid rgba(148,163,184,.2);}
+  .wrap{max-width:1000px;margin:0 auto;padding:14px 16px;}
+  h1{margin:0;font-size:22px}
+  .pill{padding:6px 10px;border:1px solid rgba(255,255,255,.1);border-radius:999px;color:var(--muted);}
+  .meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .progress{height:10px;background:rgba(148,163,184,.2);border-radius:999px;overflow:hidden;margin-top:10px}
+  .progress>div{height:100%;width:0;background:linear-gradient(90deg,var(--accent),#60a5fa)}
+  main{padding:22px 0 100px}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.02));border:1px solid rgba(148,163,184,.2);border-radius:16px;padding:18px;box-shadow:0 10px 35px rgba(0,0,0,.35);}
+  .q-badge{padding:6px 10px;border-radius:999px;color:#fff;font-weight:700}
+  .q-badge[data-level="Knowledge"]{background:var(--blue)}
+  .q-badge[data-level="Comprehension"]{background:var(--green)}
+  .q-badge[data-level="Application"]{background:var(--yellow); color:#111827}
+  .q-badge[data-level="Higher"]{background:var(--red)}
+  .qtext{font-size:18px;line-height:1.55;margin:10px 0 12px}
+  .options{display:grid;gap:10px}
+  .opt{display:flex;gap:10px;padding:12px;border:1px solid rgba(148,163,184,.25);border-radius:12px;background:rgba(2,6,23,.4);cursor:pointer}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:14px}
+  button{appearance:none;border:none;border-radius:12px;padding:10px 14px;font-weight:700;cursor:pointer;background:linear-gradient(180deg,#22d3ee,#1ea7be);color:#042026;box-shadow:0 10px 25px rgba(34,211,238,.3)}
+  button.secondary{background:rgba(148,163,184,.15);color:var(--text);box-shadow:none;border:1px solid rgba(148,163,184,.25)}
+  button.danger{background:linear-gradient(180deg,#f43f5e,#e11d48);color:#fff}
+  .small{font-size:13px;color:var(--muted)}
+  .hidden{display:none!important}
+  .results{display:grid;gap:16px}
+  .grid2{display:grid;grid-template-columns:1fr;gap:16px}
+  @media(min-width:900px){ .grid2{grid-template-columns:1.2fr .8fr} }
+  table{width:100%;border-collapse:collapse;border-radius:12px;overflow:hidden}
+  th,td{padding:10px 12px;border-bottom:1px solid rgba(148,163,184,.2);text-align:left}
+  th{background:rgba(148,163,184,.15)}
+  .ok{color:#22c55e;font-weight:700}.bad{color:#f43f5e;font-weight:700}.neutral{color:#eab308;font-weight:700}
+  canvas{background:rgba(255,255,255,.03);border:1px dashed rgba(148,163,184,.25);border-radius:12px}
+  footer{position:fixed;bottom:0;left:0;right:0;background:rgba(11,16,32,.85);backdrop-filter:blur(8px);border-top:1px solid rgba(148,163,184,.18)}
+  .footer-inner{max-width:1000px;margin:0 auto;display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 16px}
+  .legend span{padding:6px 10px;border-radius:999px;border:1px solid rgba(148,163,184,.2)}
+  .l-blue{background:var(--blue);color:#fff}.l-green{background:var(--green);color:#fff}.l-yellow{background:var(--yellow);color:#111827}.l-red{background:var(--red);color:#fff}
+  @media print { header, footer, .nav, .meta, .legend {display:none !important} body{background:#fff;color:#111827} .card{border:1px solid #ddd;box-shadow:none} }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Advanced HTML Quiz · অধ্যায় ৫: সমীকরণ</h1>
+    <div class="meta">
+      <span class="pill">⏳ টাইমার: <span class="timer" id="timer">90:00</span></span>
+      <span class="pill">🔀 শাফল অন</span>
+      <span class="pill">➖ ভুলে −0.25</span>
+      <span class="pill">💾 অটো-সেভ</span>
+    </div>
+    <div class="progress"><div id="bar"></div></div>
+  </div>
+</header>
+<main class="wrap">
+  <section id="quiz-card" class="card">
+    <div class="question-header" style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+      <div>
+        <div id="qBadge" class="q-badge" data-level="Knowledge">Knowledge</div>
+        <div class="small">প্রশ্ন <span id="qNum">1</span> / <span id="qTotal">100</span></div>
+      </div>
+      <div class="small">আপনার উত্তর সেভ হবে ✔</div>
+    </div>
+    <div class="qtext" id="qText">Loading…</div>
+    <div class="options" id="options"></div>
+    <div class="nav">
+      <button class="secondary" id="prevBtn">⬅ পূর্বের</button>
+      <div>
+        <button class="secondary" id="resetBtn">🔄 রিসেট</button>
+        <button class="secondary" id="saveBtn">💾 সেভ</button>
+      </div>
+      <button id="nextBtn">পরবর্তী ➡</button>
+    </div>
+  </section>
+
+  <section id="results" class="card hidden">
+    <div class="results">
+      <div class="grid2">
+        <div>
+          <h2>📋 ফলাফল ও রিপোর্ট</h2>
+          <table>
+            <tbody>
+              <tr><th>মোট প্রশ্ন</th><td id="sumTotal">—</td></tr>
+              <tr><th>সঠিক</th><td id="sumRight">—</td></tr>
+              <tr><th>ভুল</th><td id="sumWrong">—</td></tr>
+              <tr><th>ফাঁকা</th><td id="sumBlank">—</td></tr>
+              <tr><th>নেগেটিভ</th><td id="sumNeg">—</td></tr>
+              <tr><th>ফাইনাল স্কোর</th><td id="sumScore">—</td></tr>
+              <tr><th>সময় লেগেছে</th><td id="sumTime">—</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <h3>📊 Bloom স্তরভিত্তিক চার্ট</h3>
+          <canvas id="chart" width="500" height="320"></canvas>
+        </div>
+      </div>
+      <h3>ব্যাখ্যাসহ উত্তর তালিকা</h3>
+      <table>
+        <thead><tr><th>#</th><th>স্তর</th><th>প্রশ্ন</th><th>আপনার</th><th>সঠিক</th><th>স্ট্যাটাস</th><th>ব্যাখ্যা</th></tr></thead>
+        <tbody id="expBody"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+<footer>
+  <div class="footer-inner">
+    <div class="legend">
+      <span class="l-blue">🔵 জ্ঞানমূলক</span>
+      <span class="l-green">🟢 অনুধাবন</span>
+      <span class="l-yellow">🟡 প্রয়োগ</span>
+      <span class="l-red">🔴 উচ্চতর</span>
+    </div>
+    <button id="submitBtn" class="danger">✅ সাবমিট</button>
+  </div>
+</footer>
+<script>
+const STORAGE_KEY = "equations_ch5_quiz_v1";
+const QUESTIONS = [{"level": "Application", "text": "সমাধান সেট কোনটি?  x² − 5x + 6 = 0", "options": ["{ 2, 3 }", "{ 1, 6 }", "{ -2, -3 }", "কোনোটিই নয়"], "correct": 0, "expl": "ফ্যাক্টরাইজ: (x−2)(x−3)=0 ⇒ x=2 বা x=3।"}, {"level": "Application", "text": "সমীকরণ x² + 6x + 9 = 0 এর সমাধান = ?", "options": ["x = 3", "x = −3", "x = 0", "x = 6"], "correct": 1, "expl": "(x+3)²=0 ⇒ একক মূল −3। (সূত্র/বর্গ পূর্ণকরণ উভয়েই এক ফল)।"}, {"level": "Application", "text": "একঘাত সমীকরণ 3x + 5 = 2x + 7 ⇒ x = ?", "options": ["1", "2", "3", "−2"], "correct": 1, "expl": "3x−2x = 7−5 ⇒ x=2।"}, {"level": "Application", "text": "যুগপৎ সমীকরণ x + y = 6,  x − y = 2 ⇒ (x, y) = ?", "options": ["(3,3)", "(4,2)", "(5,1)", "(2,4)"], "correct": 1, "expl": "যোগে 2x=8 ⇒ x=4; তবে y=6−4=2।"}, {"level": "Application", "text": "সমাধান করুন: 3x − 7 = 2x + 5 ⇒ x = ?", "options": ["10", "11", "12", "13"], "correct": 2, "expl": "3x−2x = 5+7 ⇒ x = 12।"}, {"level": "Higher", "text": "x² + y² = 25 এবং x + y = 9 ⇒ (x, y) = ?", "options": ["(5,4) বা (4,5)", "(7,2) কেবল", "(3,6) কেবল", "(8,1) বা (1,8)"], "correct": 0, "expl": "(x+y)²=x²+y²+2xy ⇒ 81=25+2xy ⇒ xy=28; t²−9t+28=0 ⇒ t=4,5।"}, {"level": "Knowledge", "text": "Quadratic formula কোনটি?", "options": ["x = (−b ± √(b²−4ac)) / (2a)", "x = (b ± √(b²+4ac)) / (2a)", "x = (−b ± √(4ac−b)) / (2a)", "x = (b ± √(4ac−b²)) / (2a)"], "correct": 0, "expl": "মানক সূত্র: x = (−b ± √(b²−4ac)) / (2a)।"}, {"level": "Knowledge", "text": "Discriminant D = ?", "options": ["b²−4ac", "4ac−b", "b−4ac", "(b−2a)c"], "correct": 0, "expl": "বিচারক D = b² − 4ac; এটি মূলের প্রকৃতি নির্ধারণ করে।"}, {"level": "Knowledge", "text": "D > 0 হলে মূলের প্রকৃতি—", "options": ["দুটি ভিন্ন বাস্তব", "একটি দ্বিগুণ বাস্তব", "দুটি যুগল-সঙ্গত জটিল", "বাস্তব নয়"], "correct": 0, "expl": "D>0 ⇒ দুইটি ভিন্ন বাস্তব মূল।"}, {"level": "Knowledge", "text": "D = 0 হলে—", "options": ["একটি দ্বিগুণ বাস্তব মূল", "দুটি ভিন্ন বাস্তব", "দুটি জটিল", "কোনো মূল নেই"], "correct": 0, "expl": "D=0 ⇒ repeated real root (double root)।"}, {"level": "Knowledge", "text": "D < 0 হলে—", "options": ["দুটি জটিল যুগল-সঙ্গত মূল", "দুটি ভিন্ন বাস্তব", "একটি দ্বিগুণ বাস্তব", "কোনোটিই নয়"], "correct": 0, "expl": "D<0 ⇒ complex conjugate pair।"}, {"level": "Knowledge", "text": "Vieta সূত্রে, ax²+bx+c=0 সমীকরণের মূল α,β হলে α+β = ?", "options": ["−b/a", "b/a", "−c/a", "c/a"], "correct": 0, "expl": "Vieta: α+β=−b/a, αβ=c/a।"}, {"level": "Knowledge", "text": "Vieta সূত্রে αβ = ?", "options": ["c/a", "−b/a", "−c/a", "b/c"], "correct": 0, "expl": "Vieta: αβ = c/a।"}, {"level": "Knowledge", "text": "সমতা (identity) ও সমীকরণের পার্থক্য—", "options": ["সমতা সব x-এর জন্য সত্য; সমীকরণ নির্দিষ্ট x-এর জন্য", "উল্টোটা", "দুটিই একই", "কোনো পার্থক্য নেই"], "correct": 0, "expl": "Identity ∀x সত্য; equation কেবল সমাধান সেটে সত্য।"}, {"level": "Knowledge", "text": "একঘাত সমীকরণের সাধারণ রূপ—", "options": ["ax + b = 0 (a≠0)", "ax²+bx+c=0", "ax³+b=0", "|x|=a"], "correct": 0, "expl": "একঘাত: ax+b=0, a≠0।"}, {"level": "Knowledge", "text": "বর্গ পূর্ণকরণে কোন পদ যুক্ত/বিয়োগ করা হয়? (x²+Bx) তে", "options": ["(B/2)²", "(B)²", "2B", "B/4"], "correct": 0, "expl": "x²+Bx + (B/2)² = (x + B/2)²।"}, {"level": "Knowledge", "text": "সমকালীন সমীকরণ সমাধানে কোন পদ্ধতি নয়?", "options": ["Elimination", "Substitution", "Cramer’s Rule", "Integration"], "correct": 3, "expl": "Integration সমীকরণ সমাধানে প্রয়োজন নয়।"}, {"level": "Knowledge", "text": "|x| = a (a≥0) ⇒ x = ?", "options": ["±a", "a", "−a", "0"], "correct": 0, "expl": "পরমমান: |x|=a ⇒ x=a বা x=−a।"}, {"level": "Knowledge", "text": "x+1/x জানা থাকলে x²+1/x² = ?", "options": ["(x+1/x)²−2", "(x+1/x)²", "(x−1/x)²", "2(x+1/x)"], "correct": 0, "expl": "x²+1/x²=(x+1/x)²−2।"}, {"level": "Knowledge", "text": "রাশির সমতা: (x−a)(x−b)=0 ⇒", "options": ["x=a বা x=b", "x=ab", "x=a=b", "x=0"], "correct": 0, "expl": "Zero product property।"}, {"level": "Knowledge", "text": "সমীকরণ ax=b ⇒ x=? (a≠0)", "options": ["b/a", "a/b", "ab", "a−b"], "correct": 0, "expl": "রৈখিক সমীকরণ সমাধান।"}, {"level": "Knowledge", "text": "জোড়া (solution pair) কী?", "options": ["একাধিক রাশি-সমেত সমীকরণের মানদ্বয়/ত্রয়ী", "শুধু একক সংখ্যা", "শুধু সেট", "কোনোটিই নয়"], "correct": 0, "expl": "দুই চলক হলে সমাধান (x,y) জোড়া।"}, {"level": "Knowledge", "text": "Cramer's rule কোন ধরনের সমীকরণে প্রযোজ্য?", "options": ["রৈখিক সমীকরণের সিস্টেমে", "একঘাতে", "দ্বিঘাতে", "পরমমানে"], "correct": 0, "expl": "ডিটারমিন্যান্ট-ভিত্তিক সমাধান।"}, {"level": "Knowledge", "text": "ফাংশনের শীর্ষবিন্দু (vertex) x = ?  ax²+bx+c (a≠0)", "options": ["−b/(2a)", "b/(2a)", "−2a/b", "c/b"], "correct": 0, "expl": "প্যারাবোলার vertex এর x-অক্ষ −b/(2a)।"}, {"level": "Knowledge", "text": "ax²+bx+c=0 এর গ্রাফ কোনটি?", "options": ["প্যারাবোলা", "সরলরেখা", "বৃত্ত", "এলিপ্স"], "correct": 0, "expl": "দ্বিঘাত ফাংশনের গ্রাফ প্যারাবোলা।"}, {"level": "Comprehension", "text": "x² − 4x + 4 = 0 সমীকরণের মূলের প্রকৃতি কী?", "options": ["দুটি বাস্তব", "একটি দ্বিগুণ বাস্তব", "জটিল যুগল-সঙ্গত", "অজানা"], "correct": 1, "expl": "D=b²−4ac=16−16=0 ⇒ একটি দ্বিগুণ বাস্তব।"}, {"level": "Comprehension", "text": "x² + 2x − 8 = 0 সমীকরণের মূলের প্রকৃতি কী?", "options": ["দুটি বাস্তব", "একটি দ্বিগুণ বাস্তব", "জটিল যুগল-সঙ্গত", "অজানা"], "correct": 0, "expl": "D=b²−4ac=4−-32=36 ⇒ দুটি বাস্তব।"}, {"level": "Comprehension", "text": "2x² + 5x + 10 = 0 সমীকরণের মূলের প্রকৃতি কী?", "options": ["দুটি বাস্তব", "একটি দ্বিগুণ বাস্তব", "জটিল যুগল-সঙ্গত", "অজানা"], "correct": 2, "expl": "D=b²−4ac=25−80=-55 ⇒ জটিল যুগল-সঙ্গত।"}, {"level": "Comprehension", "text": "x² + 9 = 0 সমীকরণের মূলের প্রকৃতি কী?", "options": ["দুটি বাস্তব", "একটি দ্বিগুণ বাস্তব", "জটিল যুগল-সঙ্গত", "অজানা"], "correct": 2, "expl": "D=b²−4ac=0−36=-36 ⇒ জটিল যুগল-সঙ্গত।"}, {"level": "Comprehension", "text": "3x² − 6x + 3 = 0 সমীকরণের মূলের প্রকৃতি কী?", "options": ["দুটি বাস্তব", "একটি দ্বিগুণ বাস্তব", "জটিল যুগল-সঙ্গত", "অজানা"], "correct": 1, "expl": "D=b²−4ac=36−36=0 ⇒ একটি দ্বিগুণ বাস্তব।"}, {"level": "Comprehension", "text": "x² − 9 = 0 সমাধানে শ্রেষ্ঠ পদ্ধতি—", "options": ["ভগ্নাংশে রূপান্তর", "বর্গের ব্যবধান ফ্যাক্টরাইজ", "সূত্র পদ্ধতি", "Cramer’s Rule"], "correct": 1, "expl": "x²−9=(x−3)(x+3) ⇒ সরাসরি ফ্যাক্টরাইজ।"}, {"level": "Comprehension", "text": "x²+5x+7=0 (পূর্ণসংখ্যার মূল নয়) — কোন পদ্ধতি উপযোগী?", "options": ["সূত্র পদ্ধতি", "সহজ ফ্যাক্টর", "গ্রাফ", "পরমমান"], "correct": 0, "expl": "D=25−28<0 ⇒ সূত্রে জটিল মূল; সরাসরি factor কঠিন।"}, {"level": "Comprehension", "text": "|2x−5|=3 — সমাধানে কী করবেন?", "options": ["দুইটি কেস: 2x−5=±3", "বর্গ করুন", "সূত্র পদ্ধতি", "Cramer’s Rule"], "correct": 0, "expl": "পরমমানের সংজ্ঞা অনুযায়ী দুই কেস।"}, {"level": "Comprehension", "text": "√(x+4)=x−2 (ডোমেইন?)", "options": ["x≥2", "x>−4", "x≥−4", "x≤2"], "correct": 0, "expl": "ডানপাশ ≥0 ⇒ x≥2 এবং বামপাশের ভিতর x+4≥0 ⇒ x≥−4; উভয় মিলিয়ে x≥2।"}, {"level": "Comprehension", "text": "x+1/x=3 ⇒ x² − 3x + 1 = 0 — এই ধাপটি", "options": ["বৈধ রূপান্তর", "ভুল", "অপর্যাপ্ত", "অপ্রাসঙ্গিক"], "correct": 0, "expl": "উভয়পাশে x গুণ: x²+1=3x ⇒ x²−3x+1=0।"}, {"level": "Application", "text": "সমাধান সেট নির্ণয় করুন: x² − 5x + 6 = 0", "options": ["{ 2, 3 }", "{ 3, 3 }", "{ 2, 4 }", "কোনোটিই নয়"], "correct": 0, "expl": "(x−2)(x−3)=0 ⇒ x=2 বা x=3।"}, {"level": "Application", "text": "সমাধান সেট নির্ণয় করুন: x² − 5x + 4 = 0", "options": ["{ 1, 4 }", "{ 2, 4 }", "{ 1, 5 }", "কোনোটিই নয়"], "correct": 0, "expl": "(x−1)(x−4)=0 ⇒ x=1 বা x=4।"}, {"level": "Application", "text": "সমাধান সেট নির্ণয় করুন: x² − 4x − 5 = 0", "options": ["{ -1, 5 }", "{ 0, 5 }", "{ -1, 6 }", "কোনোটিই নয়"], "correct": 0, "expl": "(x−-1)(x−5)=0 ⇒ x=-1 বা x=5।"}, {"level": "Application", "text": "সমাধান সেট নির্ণয় করুন: x² + 5x + 6 = 0", "options": ["{ -3, -2 }", "{ -3, -1 }", "{ -2, -2 }", "কোনোটিই নয়"], "correct": 0, "expl": "(x−-2)(x−-3)=0 ⇒ x=-2 বা x=-3।"}, {"level": "Application", "text": "সমাধান সেট নির্ণয় করুন: x² − 8x + 15 = 0", "options": ["{ 3, 5 }", "{ 4, 5 }", "{ 3, 6 }", "কোনোটিই নয়"], "correct": 0, "expl": "(x−3)(x−5)=0 ⇒ x=3 বা x=5।"}, {"level": "Application", "text": "সমাধান সেট নির্ণয় করুন: x² − 10x + 24 = 0", "options": ["{ 4, 6 }", "{ 5, 6 }", "{ 4, 7 }", "কোনোটিই নয়"], "correct": 0, "expl": "(x−4)(x−6)=0 ⇒ x=4 বা x=6।"}, {"level": "Application", "text": "সমাধান সেট নির্ণয় করুন: x² + 2x − 8 = 0", "options": ["{ -4, 2 }", "{ -3, 2 }", "{ -4, 3 }", "কোনোটিই নয়"], "correct": 0, "expl": "(x−-4)(x−2)=0 ⇒ x=-4 বা x=2।"}, {"level": "Application", "text": "সমাধান সেট নির্ণয় করুন: x² + 6x + 5 = 0", "options": ["{ -5, -1 }", "{ -4, -1 }", "{ -5, 0 }", "কোনোটিই নয়"], "correct": 0, "expl": "(x−-5)(x−-1)=0 ⇒ x=-5 বা x=-1।"}, {"level": "Application", "text": "সমাধান সেট নির্ণয় করুন: x² − 5x − 14 = 0", "options": ["{ -2, 7 }", "{ -2, 8 }", "{ -1, 7 }", "কোনোটিই নয়"], "correct": 0, "expl": "(x−7)(x−-2)=0 ⇒ x=7 বা x=-2।"}, {"level": "Application", "text": "সমাধান সেট নির্ণয় করুন: x² − 9x + 8 = 0", "options": ["{ 1, 8 }", "{ 1, 9 }", "{ 2, 8 }", "কোনোটিই নয়"], "correct": 0, "expl": "(x−8)(x−1)=0 ⇒ x=8 বা x=1।"}, {"level": "Application", "text": "সূত্র পদ্ধতিতে সমাধান করুন: x² − 5 = 0", "options": ["{ 2.236, -2.236 }", "{ -2.236, -2.236 }", "{ 2.236, 2.236 }", "বাস্তব মূল নেই"], "correct": 0, "expl": "x = (−b ± √(b²−4ac))/(2a); D=20 ⇒ x=2.236, -2.236।"}, {"level": "Application", "text": "সূত্র পদ্ধতিতে সমাধান করুন: x² + 4x + 1 = 0", "options": ["{ -0.268, -3.732 }", "{ 0.268, -3.732 }", "{ -0.268, 3.732 }", "বাস্তব মূল নেই"], "correct": 0, "expl": "x = (−b ± √(b²−4ac))/(2a); D=12 ⇒ x=-0.268, -3.732।"}, {"level": "Application", "text": "সূত্র পদ্ধতিতে সমাধান করুন: 2x² + x − 3 = 0", "options": ["{ 1, -1.5 }", "{ -1, -1.5 }", "{ 1, 1.5 }", "বাস্তব মূল নেই"], "correct": 0, "expl": "x = (−b ± √(b²−4ac))/(2a); D=25 ⇒ x=1, -1.5।"}, {"level": "Application", "text": "সূত্র পদ্ধতিতে সমাধান করুন: x² − 6x + 5 = 0", "options": ["{ 5, 1 }", "{ -5, 1 }", "{ 5, -1 }", "বাস্তব মূল নেই"], "correct": 0, "expl": "x = (−b ± √(b²−4ac))/(2a); D=16 ⇒ x=5, 1।"}, {"level": "Application", "text": "সমাধান করুন: 5x − 7 = 3x + 9 ⇒ x = ?", "options": ["6", "7", "8", "9"], "correct": 2, "expl": "5x−3x = 9+7 ⇒ 2x=16 ⇒ x=8।"}, {"level": "Application", "text": "সমাধান করুন: 7x + 15 = 2x + 40 ⇒ x = ?", "options": ["3", "4", "5", "6"], "correct": 2, "expl": "7x−2x = 40−15 ⇒ 5x=25 ⇒ x=5।"}, {"level": "Application", "text": "সমাধান করুন: 9x − 4 = 5x + 20 ⇒ x = ?", "options": ["5", "6", "7", "8"], "correct": 1, "expl": "9x−5x = 20+4 ⇒ 4x=24 ⇒ x=6।"}, {"level": "Application", "text": "সমাধান করুন: 2(3x−1) = 14 ⇒ x = ?", "options": ["2", "8⁄3", "3", "7⁄2"], "correct": 1, "expl": "6x−2=14 ⇒ 6x=16 ⇒ x=16/6=8/3।"}, {"level": "Application", "text": "যুগপৎ সমীকরণ 2x+3y=13, x−y=1 ⇒ (x, y) = ?", "options": ["(4,3)", "(3,4)", "(5,2)", "(3,4)"], "correct": 0, "expl": "Elimination/Substitution করে সমাধান।"}, {"level": "Application", "text": "যুগপৎ সমীকরণ 3x−y=7, x+2y=8 ⇒ (x, y) = ?", "options": ["(3,2)", "(2,3)", "(4,1)", "(2,3)"], "correct": 0, "expl": "Elimination/Substitution করে সমাধান।"}, {"level": "Application", "text": "যুগপৎ সমীকরণ 4x+ y=17, 2x−3y=1 ⇒ (x, y) = ?", "options": ["(4,1)", "(1,4)", "(5,0)", "(3,2)"], "correct": 0, "expl": "Elimination/Substitution করে সমাধান।"}, {"level": "Application", "text": "|2x−3|=5 ⇒ x = ?", "options": ["4 বা −1", "1 বা −4", "8 বা −1", "−4 বা 1"], "correct": 0, "expl": "2x−3=±5 ⇒ x=4 বা x=−1।"}, {"level": "Application", "text": "√(x+1) = x−1 (ডোমেইন: x≥1) ⇒ x = ?", "options": ["2", "3", "0", "1"], "correct": 1, "expl": "(x−1)≥0 ⇒ x≥1; বর্গ করে x+1=x²−2x+1 ⇒ x²−3x=0 ⇒ x=0,3; ডোমেইনে x=3।"}, {"level": "Application", "text": "x+1/x=3 (x≠0) ⇒ x = ?", "options": ["(3±√5)/2", "(3±√13)/2", "(−3±√5)/2", "1, 3"], "correct": 0, "expl": "x²−3x+1=0 ⇒ x=[3±√(9−4)]/2 = (3±√5)/2।"}, {"level": "Higher", "text": "সমীকরণ x² + 2kx + (k²) = 0 — সমান (দ্বিগুণ) মূলের শর্তে k = ?", "options": ["যে কোনো বাস্তব", "0", "শুধু ধনাত্মক", "শুধু ঋণাত্মক"], "correct": 0, "expl": "D = (2k)² − 4·1·k² = 0 ⇒ ∀k সমান মূল (x=−k)।"}, {"level": "Higher", "text": "x² − (k+3)x + 3k = 0 — বাস্তব ভিন্ন দুই মূলের জন্য k-এর পরিসর?", "options": ["D>0 ⇒ (k+3)²−12k > 0", "D=0 ⇒ (k+3)²=12k", "k=3", "সবসময় অসম্ভব"], "correct": 0, "expl": "D=(k+3)²−12k = k²−6k+9 = (k−3)² ⇒ D>0 যখন k≠3।"}, {"level": "Higher", "text": "ax²+bx+c=0 তে α+β=5, αβ=6 ⇒ সমীকরণটি—", "options": ["x² − 5x + 6 = 0", "x² + 5x + 6 = 0", "x² − 6x + 5 = 0", "x² − 5x − 6 = 0"], "correct": 0, "expl": "মোনিক আকারে: x² − (α+β)x + αβ = 0 ⇒ x²−5x+6।"}, {"level": "Higher", "text": "x² − 4x + k = 0 এর অন্তত একটি বাস্তব মূল থাকার শর্ত—", "options": ["D ≥ 0 ⇒ 16 − 4k ≥ 0 ⇒ k ≤ 4", "k ≥ 4", "k = 4 কেবল", "কোনো শর্ত নেই"], "correct": 0, "expl": "D≥0 দরকার।"}, {"level": "Higher", "text": "ফাংশন f(x)=−x²+4x+1 — সর্বাধিক মান = ?", "options": ["5", "−5", "4", "9"], "correct": 0, "expl": "Vertex x=−b/(2a)=−4/(−2)=2 ⇒ f(2)=−4+8+1=5।"}, {"level": "Higher", "text": "x²+px+q=0 এর মূল দুটি সমান ও −3 হলে p,q = ?", "options": ["p=6, q=9", "p=−6, q=9", "p=6, q=−9", "p=−6, q=−9"], "correct": 0, "expl": "(x+3)²=x²+6x+9 ⇒ p=6,q=9।"}, {"level": "Higher", "text": "x²−5x+m=0 এর একটি মূল 2 ⇒ অন্য মূল = ?", "options": ["3", "m/2", "(m/2)", "(5−2)=3"], "correct": 0, "expl": "Sum 5 ⇒ অন্যটি 3; কারণ 2 + r = 5 ⇒ r=3; গুণফল m ⇒ 2·3=m ⇒ m=6 (পরোক্ষ)।"}, {"level": "Higher", "text": "x²−(a+b)x+ab=0 — মূলদ্বয়?", "options": ["a,b", "a,−b", "−a,−b", "ab, a+b"], "correct": 0, "expl": "Vieta উল্টো: roots a ও b।"}, {"level": "Higher", "text": "|x−2|=|x−5| ⇒ x = ?", "options": ["3.5", "2", "5", "0"], "correct": 0, "expl": "রেখা দুই প্রান্ত থেকে সমদূরত্ব বিন্দু ⇒ মধ্যবিন্দু (2+5)/2=3.5।"}, {"level": "Higher", "text": "√(2x+3)=x — বাস্তব সমাধান?", "options": ["x=3", "x=−1", "x=1", "x=0"], "correct": 0, "expl": "x≥0; বর্গ: 2x+3=x² ⇒ (x−3)(x+1)=0; ডোমেইনে x=3।"}, {"level": "Higher", "text": "x²+x+1=0 — মূলের প্রকৃতি?", "options": ["জটিল যুগল-সঙ্গত", "দ্বিগুণ বাস্তব", "দুটি বাস্তব", "একটিও নয়"], "correct": 0, "expl": "D=1−4<0 ⇒ complex conjugate।"}, {"level": "Higher", "text": "সমীকরণে 1/x রূপান্তর: x ≠ 0 কেন বাধ্যতামূলক?", "options": ["ভাগ শূন্যে অনির্ধারিত", "কারণ দরকার নেই", "যেকোনো x", "শুধু ধনাত্মক x"], "correct": 0, "expl": "ভাগ শূন্যে নিষিদ্ধ।"}, {"level": "Higher", "text": "x+y=7, xy=10 ⇒ x,y কী?", "options": ["5,2", "6,1", "4,3", "7,0"], "correct": 0, "expl": "t²−7t+10=0 ⇒ t=5,2।"}, {"level": "Higher", "text": "k∈ℝ হলে x²+kx+1=0 — বাস্তব মূলের জন্য k-এর শর্ত?", "options": ["k²−4 ≥ 0 ⇒ |k| ≥ 2", "|k| ≤ 2", "k=0", "সব k"], "correct": 0, "expl": "D=k²−4 ≥0 ⇒ |k|≥2।"}, {"level": "Higher", "text": "দ্বিঘাত ax²+bx+c এর সর্বনিম্ন/সর্বাধিক কবে থাকে?", "options": ["a>0 হলে সর্বনিম্ন, a<0 হলে সর্বাধিক", "a<0 হলে সর্বনিম্ন", "সর্বদা সর্বাধিক", "সর্বদা সর্বনিম্ন"], "correct": 0, "expl": "প্যারাবোলা ওপরে/নিচে খোলে।"}, {"level": "Higher", "text": "α,β পূর্ণসংখ্যা হলে x²−(α+β)x+αβ=0 সমীকরণের মূল—", "options": ["α ও β", "α, −β", "−α, −β", "αβ, α+β"], "correct": 0, "expl": "Vieta উল্টো।"}, {"level": "Higher", "text": "x² − 2x + 5 = 0 — |x−1| = ?", "options": ["√4 = 2", "√(D)", "0", "1"], "correct": 0, "expl": "(x−1)²= x²−2x+1 ⇒ সমীকরণ (x−1)²=4 ⇒ |x−1|=2।"}, {"level": "Higher", "text": "x² − 5x + 7 = 0 — বাস্তব মূল আছে?", "options": ["না (D<0)", "হ্যাঁ", "একটি", "অনির্দিষ্ট"], "correct": 0, "expl": "D=25−28<0 ⇒ বাস্তব নেই।"}, {"level": "Higher", "text": "x² − 10x + 25 = 0 — x = ?", "options": ["5 (দ্বিগুণ)", "−5", "5 ও −5", "0"], "correct": 0, "expl": "(x−5)²=0।"}, {"level": "Application", "text": "সমাধান করুন: x² − 5x + 6 = 0", "options": ["{ 2, 3 }", "{ 2, 4 }", "{ 3, 3 }", "কোনোটিই নয়"], "correct": 0, "expl": "(x−3)(x−2)=0 ⇒ x=3 বা x=2।"}, {"level": "Application", "text": "সমাধান করুন: x² − 10x + 24 = 0", "options": ["{ 4, 6 }", "{ 5, 6 }", "{ 4, 7 }", "কোনোটিই নয়"], "correct": 0, "expl": "(x−4)(x−6)=0 ⇒ x=4 বা x=6।"}, {"level": "Application", "text": "সমাধান করুন: x² − 2x + 1 = 0", "options": ["{ 1, 1 }", "{ 1, 2 }", "{ 1, 2 }", "কোনোটিই নয়"], "correct": 0, "expl": "(x−1)(x−1)=0 ⇒ x=1 বা x=1।"}, {"level": "Application", "text": "সমাধান করুন: x² − 6x + 5 = 0", "options": ["{ 1, 5 }", "{ 1, 6 }", "{ 2, 5 }", "কোনোটিই নয়"], "correct": 0, "expl": "(x−5)(x−1)=0 ⇒ x=5 বা x=1।"}, {"level": "Application", "text": "সমাধান করুন: x² − 8x + 15 = 0", "options": ["{ 3, 5 }", "{ 4, 5 }", "{ 3, 6 }", "কোনোটিই নয়"], "correct": 0, "expl": "(x−3)(x−5)=0 ⇒ x=3 বা x=5।"}, {"level": "Application", "text": "সমাধান করুন: x² − 6x + 5 = 0", "options": ["{ 1, 5 }", "{ 2, 5 }", "{ 1, 6 }", "কোনোটিই নয়"], "correct": 0, "expl": "(x−1)(x−5)=0 ⇒ x=1 বা x=5।"}, {"level": "Application", "text": "সমাধান করুন: x² − 3x + 2 = 0", "options": ["{ 1, 2 }", "{ 1, 3 }", "{ 2, 2 }", "কোনোটিই নয়"], "correct": 0, "expl": "(x−2)(x−1)=0 ⇒ x=2 বা x=1।"}, {"level": "Application", "text": "সমাধান করুন: x² − 5x + 4 = 0", "options": ["{ 1, 4 }", "{ 2, 4 }", "{ 1, 5 }", "কোনোটিই নয়"], "correct": 0, "expl": "(x−1)(x−4)=0 ⇒ x=1 বা x=4।"}, {"level": "Application", "text": "সমাধান করুন: x² − 5x + 4 = 0", "options": ["{ 1, 4 }", "{ 1, 5 }", "{ 2, 4 }", "কোনোটিই নয়"], "correct": 0, "expl": "(x−4)(x−1)=0 ⇒ x=4 বা x=1।"}, {"level": "Application", "text": "সমাধান করুন: x² − 3x + 2 = 0", "options": ["{ 1, 2 }", "{ 1, 3 }", "{ 2, 2 }", "কোনোটিই নয়"], "correct": 0, "expl": "(x−2)(x−1)=0 ⇒ x=2 বা x=1।"}, {"level": "Application", "text": "সমাধান করুন: x² − 9x + 20 = 0", "options": ["{ 4, 5 }", "{ 4, 6 }", "{ 5, 5 }", "কোনোটিই নয়"], "correct": 0, "expl": "(x−5)(x−4)=0 ⇒ x=5 বা x=4।"}, {"level": "Application", "text": "সমাধান করুন: x² − 6x + 5 = 0", "options": ["{ 1, 5 }", "{ 2, 5 }", "{ 1, 6 }", "কোনোটিই নয়"], "correct": 0, "expl": "(x−1)(x−5)=0 ⇒ x=1 বা x=5।"}, {"level": "Application", "text": "সমাধান করুন: x² − 3x + 2 = 0", "options": ["{ 1, 2 }", "{ 2, 2 }", "{ 1, 3 }", "কোনোটিই নয়"], "correct": 0, "expl": "(x−1)(x−2)=0 ⇒ x=1 বা x=2।"}, {"level": "Application", "text": "সমাধান করুন: x² − 12x + 36 = 0", "options": ["{ 6, 6 }", "{ 6, 7 }", "{ 6, 7 }", "কোনোটিই নয়"], "correct": 0, "expl": "(x−6)(x−6)=0 ⇒ x=6 বা x=6।"}, {"level": "Application", "text": "সমাধান করুন: x² − 6x + 5 = 0", "options": ["{ 1, 5 }", "{ 1, 6 }", "{ 2, 5 }", "কোনোটিই নয়"], "correct": 0, "expl": "(x−5)(x−1)=0 ⇒ x=5 বা x=1।"}, {"level": "Application", "text": "সমাধান করুন: x² − 10x + 25 = 0", "options": ["{ 5, 5 }", "{ 5, 6 }", "{ 5, 6 }", "কোনোটিই নয়"], "correct": 0, "expl": "(x−5)(x−5)=0 ⇒ x=5 বা x=5।"}, {"level": "Application", "text": "সমাধান করুন: x² − 5x + 4 = 0", "options": ["{ 1, 4 }", "{ 1, 5 }", "{ 2, 4 }", "কোনোটিই নয়"], "correct": 0, "expl": "(x−4)(x−1)=0 ⇒ x=4 বা x=1।"}, {"level": "Application", "text": "সমাধান করুন: x² − 3x + 2 = 0", "options": ["{ 1, 2 }", "{ 1, 3 }", "{ 2, 2 }", "কোনোটিই নয়"], "correct": 0, "expl": "(x−2)(x−1)=0 ⇒ x=2 বা x=1।"}, {"level": "Application", "text": "সমাধান করুন: x² − 7x + 10 = 0", "options": ["{ 2, 5 }", "{ 2, 6 }", "{ 3, 5 }", "কোনোটিই নয়"], "correct": 0, "expl": "(x−5)(x−2)=0 ⇒ x=5 বা x=2।"}, {"level": "Application", "text": "সমাধান করুন: x² − 7x + 12 = 0", "options": ["{ 3, 4 }", "{ 4, 4 }", "{ 3, 5 }", "কোনোটিই নয়"], "correct": 0, "expl": "(x−3)(x−4)=0 ⇒ x=3 বা x=4।"}, {"level": "Application", "text": "সমাধান করুন: x² − 7x + 10 = 0", "options": ["{ 2, 5 }", "{ 3, 5 }", "{ 2, 6 }", "কোনোটিই নয়"], "correct": 0, "expl": "(x−2)(x−5)=0 ⇒ x=2 বা x=5।"}, {"level": "Application", "text": "সমাধান করুন: x² − 6x + 5 = 0", "options": ["{ 1, 5 }", "{ 2, 5 }", "{ 1, 6 }", "কোনোটিই নয়"], "correct": 0, "expl": "(x−1)(x−5)=0 ⇒ x=1 বা x=5।"}];
+const TOTAL = QUESTIONS.length;
+
+const $ = s=>document.querySelector(s);
+const $$ = s=>Array.from(document.querySelectorAll(s));
+
+let state = {order:[], answers:{}, current:0, remaining: 90*60, finished:false, startedAt: Date.now()};
+
+function shuffle(arr){ for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]];} return arr; }
+function formatTime(s){const m=String(Math.floor(s/60)).padStart(2,'0'); const r=String(s%60).padStart(2,'0'); return m+":"+r;}
+
+function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function load(){
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if(raw){
+    try{ const obj=JSON.parse(raw); if(Array.isArray(obj.order)){ state = Object.assign(state,obj); } }catch(e){}
+  }
+  if(!state.order || state.order.length!==TOTAL){
+    state.order = shuffle([...Array(TOTAL).keys()]);
+    state.current = 0;
+    state.remaining = 90*60;
+    save();
+  }
+}
+
+function render(){
+  $('#qTotal').textContent = TOTAL;
+  $('#qNum').textContent = state.current+1;
+  $('#bar').style.width = ((state.current)/TOTAL*100)+'%';
+  const qIdx = state.order[state.current];
+  const q = QUESTIONS[qIdx];
+  const badge=$('#qBadge'); badge.dataset.level=q.level; badge.textContent=q.level;
+  $('#qText').innerHTML = q.text;
+  const opts=$('#options'); opts.innerHTML='';
+  q.options.forEach((op,i)=>{
+    const lbl=document.createElement('label'); lbl.className='opt';
+    lbl.innerHTML = `<input type="radio" name="q_${qIdx}" value="${i}"> <div>${op}</div>`;
+    opts.appendChild(lbl);
+  });
+  if(state.answers[qIdx]!=null){
+    const v=String(state.answers[qIdx]); const inp=$(`input[name="q_${qIdx}"][value="${v}"]`); if(inp) inp.checked=true;
+  }
+  $$('#options input[type="radio"]').forEach(inp=>{
+    inp.addEventListener('change',e=>{ state.answers[qIdx]=Number(e.target.value); save(); });
+  });
+  $('#prevBtn').disabled = state.current===0;
+  $('#nextBtn').textContent = state.current===TOTAL-1 ? 'শেষ ➡' : 'পরবর্তী ➡';
+}
+
+let timer=null;
+function startTimer(){
+  if(timer) clearInterval(timer);
+  timer = setInterval(()=>{
+    if(state.finished){ clearInterval(timer); return; }
+    state.remaining=Math.max(0, state.remaining-1);
+    $('#timer').textContent = formatTime(state.remaining);
+    if(state.remaining===0){ submit(true); }
+    if(state.remaining%5===0) save();
+  },1000);
+}
+
+$('#prevBtn').addEventListener('click',()=>{ if(state.current>0){ state.current--; save(); render(); } });
+$('#nextBtn').addEventListener('click',()=>{ if(state.current<TOTAL-1){ state.current++; save(); render(); } else { submit(false); } });
+$('#resetBtn').addEventListener('click',()=>{ if(confirm('সব প্রগ্রেস মুছে ফেলবেন?')){ localStorage.removeItem(STORAGE_KEY); location.reload(); } });
+$('#saveBtn').addEventListener('click',()=>{ save(); alert('✅ সেভ হয়েছে'); });
+$('#submitBtn').addEventListener('click',()=> submit(false));
+
+function submit(auto){
+  state.finished=true; save(); clearInterval(timer);
+  let right=0, wrong=0, blank=0;
+  const byLevel = {Knowledge:{total:0,right:0}, Comprehension:{total:0,right:0}, Application:{total:0,right:0}, Higher:{total:0,right:0}};
+  const exp=[];
+  QUESTIONS.forEach((q, i)=>{
+    byLevel[q.level].total++;
+    const a = state.answers[i];
+    const corr = q.correct;
+    let status='ফাঁকা', your='—', ok=false;
+    if(a==null){ blank++; }
+    else if(a===corr){ right++; status='সঠিক'; your=q.options[a]; ok=true; }
+    else { wrong++; status='ভুল'; your=q.options[a]; }
+    if(ok) byLevel[q.level].right++;
+    exp.push(`<tr><td>${i+1}</td><td>${q.level}</td><td>${q.text}</td><td>${your}</td><td>${q.options[corr]}</td><td class="${ok?'ok':(a==null?'neutral':'bad')}">${status}</td><td>${q.expl}</td></tr>`);
+  });
+  const score = right - 0.25*wrong;
+  $('#sumTotal').textContent = TOTAL;
+  $('#sumRight').textContent = right;
+  $('#sumWrong').textContent = wrong;
+  $('#sumBlank').textContent = blank;
+  $('#sumNeg').textContent = `−${(0.25*wrong).toFixed(2)}`;
+  $('#sumScore').textContent = `${score.toFixed(2)} / ${TOTAL}`;
+  const used = 90*60 - state.remaining; const m=Math.floor(used/60), s=used%60;
+  $('#sumTime').textContent = `${m} মিনিট ${s} সেকেন্ড`;
+  document.getElementById('expBody').innerHTML = exp.join('');
+  document.getElementById('quiz-card').classList.add('hidden');
+  document.getElementById('results').classList.remove('hidden');
+  $('#bar').style.width = '100%';
+}
+
+function drawChart(by){
+  const canvas=document.getElementById('chart'); const ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const labels=['Knowledge','Comprehension','Application','Higher'];
+  const totals=labels.map(l=>by[l].total), rights=labels.map(l=>by[l].right);
+  const pad=40, W=canvas.width, H=canvas.height; const gw=W-pad*2, gh=H-pad*2;
+  ctx.strokeStyle='rgba(148,163,184,.6)'; ctx.strokeRect(pad,pad,gw,gh);
+  const maxY=Math.max(...totals,1); const barW=gw/(labels.length*3);
+  const styles=getComputedStyle(document.documentElement);
+  const colors={Knowledge:styles.getPropertyValue('--blue').trim(),Comprehension:styles.getPropertyValue('--green').trim(),Application:styles.getPropertyValue('--yellow').trim(),Higher:styles.getPropertyValue('--red').trim()};
+  labels.forEach((lab,i)=>{
+    const x0=pad+i*3*barW+barW*0.5;
+    const t=totals[i], r=rights[i];
+    const htT=t/maxY*gh, htR=r/maxY*gh;
+    ctx.fillStyle='rgba(148,163,184,.35)'; ctx.fillRect(x0, pad+gh-htT, barW*.9, htT);
+    ctx.fillStyle=colors[lab]; ctx.fillRect(x0+barW, pad+gh-htR, barW*.9, htR);
+    ctx.fillStyle='#cbd5e1'; ctx.font='12px sans-serif'; ctx.textAlign='center'; ctx.fillText(lab, x0+barW*.5, H-10);
+  });
+  ctx.fillStyle='#cbd5e1'; ctx.font='12px sans-serif'; ctx.textAlign='left'; ctx.fillText('ফিকে = মোট, রঙিন = সঠিক', pad+8, pad-10);
+}
+
+load(); render(); startTimer();
+</script>
+</body></html>
